@@ -6,7 +6,7 @@ use App\Services\ChatService;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
-class HandleInertiaRequests extends Middleware
+class SharedDataMiddleware extends Middleware
 {
     /**
      * The root template that's loaded on the first page visit.
@@ -30,10 +30,12 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $chatService = app(ChatService::class);
+        $chats = $chatService->getChats(auth()->user());
+
+
         return array_merge(parent::share($request), [
-            'auth' => [
-                'user' => $request->user(),
-            ],
+            'chats' => ChatResource::collection($chats)
         ]);
     }
 }
