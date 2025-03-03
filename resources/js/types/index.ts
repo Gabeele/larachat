@@ -33,4 +33,29 @@ export interface User {
     updated_at: string;
 }
 
+export interface ChatMember {
+    id: number;
+    name: string;
+    email: string;
+}
+
+export interface ChatOwner {
+    id: number;
+    name: string;
+    email: string;
+}
+
+export interface Chat {
+    id: number;
+    name: string;
+    owner: ChatOwner;
+    members: ChatMember[][];
+    created_at: string | null;
+    updated_at: string;
+}
+
+export interface ChatsData {
+    data: Chat[];
+}
+
 export type BreadcrumbItemType = BreadcrumbItem;

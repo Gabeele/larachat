@@ -3,29 +3,25 @@ import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
+import { type NavItem, ChatsData } from '@/types';
+import { Link, usePage } from '@inertiajs/vue3';
+import { Speech, MessageSquare } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
+const chats = usePage().props.chats as ChatsData;
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutGrid,
-    },
-];
+const mainNavItems: NavItem[] = chats && chats.data
+    ? chats.data.map(chat => ({
+        title: chat.name,
+        href: `/chats/${chat.id}`,
+        icon: MessageSquare,
+    }))
+    : [];
 
 const footerNavItems: NavItem[] = [
     {
-        title: 'Github Repo',
+        title: 'New Chat',
         href: 'https://github.com/laravel/vue-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits',
-        icon: BookOpen,
+        icon: Speech,
     },
 ];
 </script>
