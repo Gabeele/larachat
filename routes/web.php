@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MessageController;
 use App\Http\Middleware\SharedDataMiddleware;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -15,7 +16,7 @@ Route::middleware(['auth', 'verified', SharedDataMiddleware::class])->group(func
     Route::get('dashboard', DashboardController::class)->name('dashboard');
 
     Route::get('chats/{chat}', [ChatController::class, 'show'])->name('chat.show');
-    Route::post('chats/{chat}/messages', [ChatController::class, 'store'])->name('chat.messages');
+    Route::post('chats/{chat}/messages', [MessageController::class, 'store'])->name('message.store');
 
 });
 

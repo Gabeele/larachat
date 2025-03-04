@@ -64,7 +64,7 @@ class ChatTest extends TestCase
 
         $response->assertInertia(fn (AssertableInertia $page) => $page
             ->component('Chat')
-            ->has('chat.messages', fn (AssertableInertia $page) => $page
+            ->has('message.store', fn (AssertableInertia $page) => $page
             ));
 
     }
