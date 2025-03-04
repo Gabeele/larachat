@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type NavItem, type SharedData } from '@/types';
+import { ChatNavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 
 defineProps<{
-    items: NavItem[];
+    items: ChatNavItem[];
 }>();
 
 const page = usePage<SharedData>();
@@ -14,11 +14,11 @@ const page = usePage<SharedData>();
     <SidebarGroup class="px-2 py-0">
         <SidebarGroupLabel>Chats</SidebarGroupLabel>
         <SidebarMenu>
-            <SidebarMenuItem v-for="item in items" :key="item.title">
+            <SidebarMenuItem v-for="item in items" :key="item.name">
                 <SidebarMenuButton as-child :is-active="item.href === page.url">
                     <Link :href="item.href">
                         <component :is="item.icon" />
-                        <span>{{ item.title }}</span>
+                        <span>{{ item.name }}</span>
                     </Link>
                 </SidebarMenuButton>
             </SidebarMenuItem>

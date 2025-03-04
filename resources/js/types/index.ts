@@ -10,6 +10,13 @@ export interface BreadcrumbItem {
     href: string;
 }
 
+export interface ChatNavItem {
+    name: string;
+    href: string;
+    icon?: LucideIcon;
+    isActive?: boolean;
+}
+
 export interface NavItem {
     title: string;
     href: string;
