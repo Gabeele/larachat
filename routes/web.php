@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Middleware\SharedDataMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -9,7 +10,14 @@ Route::get('/', function () {
     return Inertia::render('Welcome');
 })->name('home');
 
-Route::get('dashboard', DashboardController::class)->middleware(['auth', 'verified', SharedDataMiddleware::class])->name('dashboard');
+Route::middleware(['auth', 'verified', SharedDataMiddleware::class])->group(function () {
+
+    Route::get('dashboard', DashboardController::class)->name('dashboard');
+
+    Route::get('chats/{chat}', [ChatController::class, 'show'])->name('chat.show');
+    Route::post('chats/{chat}/messages', [ChatController::class, 'store'])->name('chat.messages');
+
+});
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

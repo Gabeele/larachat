@@ -42,4 +42,30 @@ class ChatTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    public function test_it_can_display_chat_page()
+    {
+        $userA = User::factory()->create();
+        $userB = User::factory()->create();
+
+        $chat = Chat::factory()->create([
+            'user_id' => $userA->id,
+        ]);
+
+        $chat->users()->attach($userA);
+        $chat->users()->attach($userB);
+
+        Message::factory()->create([
+            'chat_id' => $chat->id,
+            'user_id' => $userA->id,
+        ]);
+
+        $response = $this->actingAs($userA)->get(route('chat.show', $chat));
+
+        $response->assertInertia(fn (AssertableInertia $page) => $page
+            ->component('Chat')
+            ->has('chat.messages', fn (AssertableInertia $page) => $page
+            ));
+
+    }
 }

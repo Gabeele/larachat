@@ -65,4 +65,19 @@ export interface ChatsData {
     data: Chat[];
 }
 
+export interface Sender {
+    user_id: number;
+    name: string;
+    email: string;
+}
+
+export interface Message {
+    id: number;
+    message: string;
+    created_at: string;
+    updated_at: string;
+    sender: Sender;
+    chat_id: number;
+}
+
 export type BreadcrumbItemType = BreadcrumbItem;
