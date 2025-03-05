@@ -3,7 +3,12 @@
         <div class="flex flex-col h-[calc(100vh-4rem)]"> <!-- Adjust for header height -->
             <!-- Chat Header -->
             <div class="border-b p-4">
-                <h2 class="text-lg font-semibold">Chat</h2>
+                <h2 class="text-lg font-semibold">{{chat.name}}</h2>
+                <p class="flex gap-2 text-sm text-muted-foreground">
+                    <span v-for="(member, index) in chat.members[0]" :key="member.id">
+                        {{ member.name }}{{ index < chat.members[0].length - 1 ? ',' : '' }}
+                    </span>
+                </p>
             </div>
 
             <!-- Messages Container -->
@@ -60,24 +65,41 @@
 
 <script setup lang="ts">
 import { ref, onMounted, nextTick, watch, computed } from 'vue';
-import { usePage, useForm, router, WhenVisible } from '@inertiajs/vue3';
+import { usePage, useForm, router, WhenVisible, usePoll } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { Chat, User, Message, Sender, ChatMember } from '@/types';
+import { PageProps } from '@inertiajs/core';
 
-const page = usePage();
-const chat = page.props.chat.data;
-const user = page.props.auth.user;
+usePoll(1000);
+
+
+interface Props {
+    chat: {
+        data: Chat;
+    };
+    messages: {
+        data: Message[];
+    };
+    auth: {
+        user: User;
+    };
+}
+
+const page = usePage<PageProps & Props>();
+const chat = page.props.chat.data as Chat;
+const user = page.props.auth.user as User;
 const messageContainer = ref<HTMLElement | null>(null);
-const newMessage = ref('');
+const newMessage = ref<string>('');
 
-const messages = computed(() => page.props.messages.data ?? []);
+const messages = computed<Message[]>(() => page.props.messages.data ?? []);
 
 const form = useForm({
     message: ''
 });
 
-const formatDate = (date: string) => {
+const formatDate = (date: string): string => {
     return new Date(date).toLocaleTimeString('en-US', {
         hour: 'numeric',
         minute: '2-digit',
@@ -85,7 +107,7 @@ const formatDate = (date: string) => {
     });
 };
 
-const sendMessage = () => {
+const sendMessage = (): void => {
     if (!newMessage.value.trim()) return;
 
     form.message = newMessage.value;

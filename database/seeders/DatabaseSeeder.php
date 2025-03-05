@@ -14,19 +14,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::factory()->create([
+        $user1 = User::factory()->create([
             'name' => 'Test User',
-            'email' => 'test@example.com',
+            'email' => 'user1@example.com',
+        ]);
+
+        $user2 = User::factory()->create([
+            'name' => 'Test User',
+            'email' => 'user2@example.com',
         ]);
 
        $chat = Chat::factory()->create([
-            'user_id' => $user->id,
+            'user_id' => $user1->id,
         ]);
 
-       ChatUser::factory()->create([
-           'user_id' => $user->id,
-           'chat_id' => $chat->id,
-       ]);
+       $chat->users()->attach([$user2->id, $user1->id]);
+
 
     }
 }
