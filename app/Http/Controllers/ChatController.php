@@ -16,7 +16,7 @@ class ChatController extends Controller
     {
         return inertia('Chat/Show', [
             'chat' => ChatResource::make($chat),
-            'messages' => Inertia::always(fn () => MessageResource::collection($chatService->getMessages($chat))),
+            'messages' => MessageResource::collection($chatService->getMessages($chat)),
         ]);
     }
 

@@ -16,7 +16,7 @@ const page = usePage<SharedData>();
         <SidebarMenu>
             <SidebarMenuItem v-for="item in items" :key="item.name">
                 <SidebarMenuButton as-child :is-active="item.href === page.url">
-                    <Link :href="item.href">
+                    <Link :href="item.href" prefetch cache-for="10s">
                         <component :is="item.icon" />
                         <span>{{ item.name }}</span>
                     </Link>

@@ -16,7 +16,6 @@
                 ref="messageContainer"
                 class="flex-1 overflow-y-auto p-4 flex flex-col-reverse"
             >
-                <WhenVisible data="messages" :buffer="0">
                     <div class="space-y-4">
                         <div v-for="message in messages" :key="message.id" class="flex gap-3">
                             <div
@@ -44,7 +43,6 @@
                             </div>
                         </div>
                     </div>
-                </WhenVisible>
             </div>
 
             <div class="border-t p-4 bg-background">
@@ -64,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick, watch, computed } from 'vue';
+import { ref, computed } from 'vue';
 import { usePage, useForm, router, WhenVisible, usePoll } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -72,8 +70,9 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { Chat, User, Message, Sender, ChatMember } from '@/types';
 import { PageProps } from '@inertiajs/core';
 
-usePoll(1000);
-
+usePoll(2000, {
+    only: ['messages']
+});
 
 interface Props {
     chat: {
@@ -121,9 +120,6 @@ const sendMessage = (): void => {
     });
 };
 
-watch(() => page.props.messages.data, () => {
-    // Remove the scroll functions since we don't need them anymore
-}, { deep: true });
 </script>
 
 <style scoped>
