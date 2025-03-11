@@ -20,7 +20,7 @@ const chatsItems: ChatNavItem[] = chats && chats.data
 const footerNavItems: NavItem[] = [
     {
         title: 'New Chat',
-        href: 'https://github.com/laravel/vue-starter-kit',
+        href: route('chat.create'),
         icon: Speech,
     },
 ];

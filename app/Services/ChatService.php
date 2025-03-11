@@ -38,4 +38,18 @@ class ChatService
 
     }
 
+    public function storeChat(User $owner, collection $members, string $name): Chat
+    {
+        $chat =  app(Chat::class)->create([
+            'user_id' => $owner->id,
+            'name' => $name,
+        ]);
+
+        $chat->users()->attach($owner);
+        $chat->users()->attach($members);
+
+        return $chat;
+
+    }
+
 }

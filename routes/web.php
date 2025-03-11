@@ -15,6 +15,8 @@ Route::middleware(['auth', 'verified', SharedDataMiddleware::class])->group(func
 
     Route::get('dashboard', DashboardController::class)->name('dashboard');
 
+    Route::get('chats/create', [ChatController::class, 'create'])->name('chat.create');
+    Route::post('chats', [ChatController::class, 'store'])->name('chat.store');
     Route::get('chats/{chat}', [ChatController::class, 'show'])->name('chat.show');
     Route::post('chats/{chat}/messages', [MessageController::class, 'store'])->name('message.store');
 
