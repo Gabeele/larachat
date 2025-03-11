@@ -3,6 +3,7 @@ namespace App\Http\Middleware;
 
 use App\Http\Resources\ChatResource;
 use App\Services\ChatService;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -31,11 +32,13 @@ class SharedDataMiddleware extends Middleware
     public function share(Request $request): array
     {
         $chatService = app(ChatService::class);
+        $notificationService = app(NotificationService::class);
         $chats = $chatService->getChats(auth()->user());
-
+        $notifications = $notificationService->getNotifications(auth()->user());
 
         return array_merge(parent::share($request), [
-            'chats' => ChatResource::collection($chats)
+            'chats' => ChatResource::collection($chats),
+            'notifications' => $notifications->toArray(),
         ]);
     }
 }
