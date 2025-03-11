@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Chat;
+use App\Models\ChatUser;
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -38,18 +39,28 @@ class ChatService
 
     }
 
-    public function storeChat(User $owner, collection $members, string $name): Chat
+    public function storeChat(User $owner, Collection $members, string $name): Chat
     {
-        $chat =  app(Chat::class)->create([
+        $chat = app(Chat::class)->create([
             'user_id' => $owner->id,
             'name' => $name,
         ]);
 
-        $chat->users()->attach($owner);
-        $chat->users()->attach($members);
+        // Add owner
+        app(ChatUser::class)->create([
+            'chat_id' => $chat->id,
+            'user_id' => $owner->id,
+        ]);
+
+        // Add members
+        foreach ($members as $member) {
+            app(ChatUser::class)->create([
+                'chat_id' => $chat->id,
+                'user_id' => $member->id,
+            ]);
+        }
 
         return $chat;
-
     }
 
 }
