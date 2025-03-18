@@ -62,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref, computed, onMounted} from 'vue';
+import {ref, onMounted} from 'vue';
 import { usePage, useForm,} from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -88,7 +88,7 @@ const user = page.props.auth.user as User;
 const messageContainer = ref<HTMLElement | null>(null);
 const newMessage = ref<string>('');
 
-const messages = computed<Message[]>(() => page.props.messages.data ?? []);
+const messages = ref<Message[]>(page.props.messages.data ?? []);
 
 const form = useForm({
     message: ''
@@ -117,16 +117,22 @@ const sendMessage = (): void => {
 };
 
 onMounted(() => {
-    window.Echo
-        .channel(`chat.${chat.id}`)
-        .listen("MessageSentEvent", (response) => {
-            messages.value.push(response.message);
-            console.log('message received')
-    })
-    console.log('here')
-})
 
+    if (window.Echo) {
+        window.Echo
+            .channel(`chat.${chat.id}`)
+            .listen('MessageSavedEvent', (response) => {
+                console.log('Message received via WebSocket:', response);
+                messages.value.push(response.message);
+            });
 
+        window.Echo.channel(`chat.${chat.id}`).listen('*', (event, data) => {
+            console.log('Caught event:', event, data);
+        });
+    } else {
+        console.error('Echo is not initialized');
+    }
+});
 
 </script>
 
