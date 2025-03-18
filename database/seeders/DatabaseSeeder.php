@@ -37,7 +37,6 @@ class DatabaseSeeder extends Seeder
 
         $chat->users()->attach([$user2->id, $user1->id]);
 
-
         User::factory()->count(15)->create();
 
     }

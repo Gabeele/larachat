@@ -21,7 +21,6 @@ Route::middleware(['auth', 'verified', SharedDataMiddleware::class])->group(func
     Route::get('chats/{chat}', [ChatController::class, 'show'])->name('chat.show');
     Route::post('chats/{chat}/messages', [MessageController::class, 'store'])->name('message.store');
 
-
     Route::put('notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::put('notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');
     Route::delete('notifications/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
