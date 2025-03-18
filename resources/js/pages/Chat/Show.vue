@@ -62,17 +62,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { usePage, useForm, router, WhenVisible, usePoll } from '@inertiajs/vue3';
+import {ref, computed, onMounted} from 'vue';
+import { usePage, useForm,} from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Chat, User, Message, Sender, ChatMember } from '@/types';
+import { Chat, User, Message } from '@/types';
 import { PageProps } from '@inertiajs/core';
-
-usePoll(2000, {
-    only: ['messages']
-});
 
 interface Props {
     chat: {
@@ -119,6 +115,18 @@ const sendMessage = (): void => {
         }
     });
 };
+
+onMounted(() => {
+    window.Echo
+        .channel(`chat.${chat.id}`)
+        .listen("MessageSentEvent", (response) => {
+            messages.value.push(response.message);
+            console.log('message received')
+    })
+    console.log('here')
+})
+
+
 
 </script>
 

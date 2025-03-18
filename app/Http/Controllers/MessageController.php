@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSavedEvent;
 use App\Http\Requests\MessageRequest;
 use App\Models\Chat;
 use App\Services\ChatService;
@@ -13,7 +14,9 @@ class MessageController extends Controller
         $message = $request['message'];
         $user = auth()->user();
 
-        $chatService->storeMessage($chat, $message, $user);
+        $message = $chatService->storeMessage($chat, $message, $user);
+
+        broadcast(new MessageSavedEvent($message));
 
         return redirect()->to(route("chat.show", $chat))->with('success', 'Message sent!');
     }
