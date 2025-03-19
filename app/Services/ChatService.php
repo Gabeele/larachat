@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\MessageSavedEvent;
 use App\Models\Chat;
 use App\Models\ChatUser;
 use App\Models\Message;
@@ -31,12 +32,16 @@ class ChatService
 
     public function storeMessage(Chat $chat, $message, User $user): Message
     {
-        return app(Message::class)->create([
+
+        $message = app(Message::class)->create([
             'chat_id' => $chat->id,
             'user_id' => $user->id,
             'message' => $message,
         ]);
 
+        broadcast(new MessageSavedEvent($message))->toOthers();
+
+        return $message;
     }
 
     public function storeChat(User $owner, Collection $members, string $name): Chat

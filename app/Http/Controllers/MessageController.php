@@ -14,9 +14,7 @@ class MessageController extends Controller
         $message = $request['message'];
         $user = auth()->user();
 
-        $message = $chatService->storeMessage($chat, $message, $user);
-
-        broadcast(new MessageSavedEvent($message))->toOthers();
+        $chatService->storeMessage($chat, $message, $user);
 
         return redirect()->to(route("chat.show", $chat))->with('success', 'Message sent!');
     }
