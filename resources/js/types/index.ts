@@ -1,10 +1,12 @@
 import type { PageProps } from '@inertiajs/core';
 import type { LucideIcon } from 'lucide-vue-next';
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
 
 declare global {
     interface Window {
         Pusher: typeof Pusher;
-        Echo: Echo;
+        Echo: typeof Echo;
     }
 }
 
