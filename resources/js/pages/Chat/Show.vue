@@ -21,16 +21,16 @@
                             <div
                                 :class="[
                                     'flex max-w-[80%] flex-col gap-2 rounded-lg px-4 py-2',
-                                    message.sender.user_id === user.id
+                                    message.user_id === user.id
                                         ? 'ml-auto bg-primary text-primary-foreground'
                                         : 'bg-muted'
                                 ]"
                             >
                                 <div
-                                    v-if="message.sender.user_id !== user.id"
+                                    v-if="message.user_id !== user.id"
                                     class="text-sm font-semibold"
                                 >
-                                    {{ message.sender.name }}
+                                    {{ message.user_id }}
                                 </div>
 
                                 <div class="text-sm">
@@ -118,20 +118,12 @@ const sendMessage = (): void => {
 
 onMounted(() => {
 
-    if (window.Echo) {
-        window.Echo
-            .channel(`chat.${chat.id}`)
-            .listen('MessageSavedEvent', (response) => {
-                console.log('Message received via WebSocket:', response);
-                messages.value.push(response.message);
-            });
-
-        window.Echo.channel(`chat.${chat.id}`).listen('*', (event, data) => {
-            console.log('Caught event:', event, data);
+    window.Echo.private(`chat`)
+        .listen('MessageSavedEvent', (e) => {
+            console.log(e);
+            messages.value.push(e.message)
         });
-    } else {
-        console.error('Echo is not initialized');
-    }
+
 });
 
 </script>

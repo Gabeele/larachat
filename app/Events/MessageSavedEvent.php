@@ -18,10 +18,9 @@ class MessageSavedEvent implements ShouldBroadcastNow
     {
     }
 
-    public function broadcastOn(): array
+    public function broadcastOn(): Channel
     {
-        return [
-            new Channel('chat'.$this->message->chat_id)
-        ];
+//        return new PrivateChannel('chat'.$this->message->chat_id);
+        return new PrivateChannel('chat');
     }
 }

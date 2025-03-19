@@ -84,8 +84,9 @@ export interface Message {
     message: string;
     created_at: string;
     updated_at: string;
-    sender: Sender;
+    user_id: number;
     chat_id: number;
+
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;
