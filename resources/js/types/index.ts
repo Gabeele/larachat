@@ -84,7 +84,7 @@ export interface Message {
     message: string;
     created_at: string;
     updated_at: string;
-    user_id: number;
+    sender: Sender;
     chat_id: number;
 
 }

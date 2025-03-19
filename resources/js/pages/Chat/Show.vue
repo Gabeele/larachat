@@ -21,16 +21,16 @@
                             <div
                                 :class="[
                                     'flex max-w-[80%] flex-col gap-2 rounded-lg px-4 py-2',
-                                    message.user_id === user.id
+                                    message.sender.user_id === user.id
                                         ? 'ml-auto bg-primary text-primary-foreground'
                                         : 'bg-muted'
                                 ]"
                             >
                                 <div
-                                    v-if="message.user_id !== user.id"
+                                    v-if="message.sender.user_id !== user.id"
                                     class="text-sm font-semibold"
                                 >
-                                    {{ message.user_id }}
+                                    {{ message.sender.name }}
                                 </div>
 
                                 <div class="text-sm">
@@ -117,11 +117,11 @@ const sendMessage = (): void => {
 };
 
 onMounted(() => {
-
-    window.Echo.private(`chat`)
+    console.log(`chat.${chat.id}`);
+    window.Echo.private(`chat.${chat.id}`)
         .listen('MessageSavedEvent', (e) => {
             console.log(e);
-            messages.value.push(e.message)
+            messages.value.push(e)
         });
 
 });
