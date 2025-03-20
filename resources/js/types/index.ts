@@ -25,6 +25,7 @@ export interface ChatNavItem {
     href: string;
     icon?: LucideIcon;
     isActive?: boolean;
+    hasNewMessage?: boolean;
 }
 
 export interface NavItem {

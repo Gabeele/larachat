@@ -12,7 +12,6 @@ use Illuminate\Queue\SerializesModels;
 
 class MessageSavedEvent implements ShouldBroadcastNow
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public function __construct(public Message $message)
     {

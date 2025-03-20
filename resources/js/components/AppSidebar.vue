@@ -1,4 +1,7 @@
 <script setup lang="ts">
+//@ts-nocheck
+
+import { ref, onMounted, computed, watch } from 'vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
@@ -7,15 +10,23 @@ import { type ChatNavItem, ChatsData, NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 import { Speech, MessageSquare } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
-const chats = usePage().props.chats as ChatsData;
 
-const chatsItems: ChatNavItem[] = chats && chats.data
-    ? chats.data.map(chat => ({
-        name: chat.name,
-        href: `/chats/${chat.id}`,
-        icon: MessageSquare,
-    }))
-    : [];
+const page = usePage();
+const chats = usePage().props.chats as ChatsData;
+const auth = page.props.auth;
+
+const hasNewMessage = ref<Record<string, boolean>>({});
+
+const chatsItems = computed(() => {
+    return chats && chats.data
+        ? chats.data.map(chat => ({
+            name: chat.name,
+            href: `/chats/${chat.id}`,
+            icon: MessageSquare,
+            hasNewMessage: hasNewMessage.value[chat.id] || false
+        }))
+        : [];
+});
 
 const footerNavItems: NavItem[] = [
     {
@@ -24,6 +35,23 @@ const footerNavItems: NavItem[] = [
         icon: Speech,
     },
 ];
+
+onMounted(() => {
+    window.Echo.private(`App.Models.User.${auth.user.id}`)
+        .notification((notification) => {
+            if (notification.type.includes('NewMessageNotification') && notification.chat_id) {
+                console.log('Marking new message for chat:', notification.chat_id);
+                hasNewMessage.value[notification.chat_id] = true;
+            }
+        });
+});
+
+watch(() => page.url, (newUrl) => {
+    const chatId = newUrl.match(/\/chats\/(\d+)/)?.[1];
+    if (chatId && hasNewMessage.value[chatId]) {
+        hasNewMessage.value[chatId] = false;
+    }
+});
 </script>
 
 <template>

@@ -7,8 +7,10 @@ use App\Models\Chat;
 use App\Models\ChatUser;
 use App\Models\Message;
 use App\Models\User;
+use App\Notifications\NewMessageNotification;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Notification;
 
 class ChatService
 {
@@ -32,7 +34,6 @@ class ChatService
 
     public function storeMessage(Chat $chat, $message, User $user): Message
     {
-
         $message = app(Message::class)->create([
             'chat_id' => $chat->id,
             'user_id' => $user->id,
@@ -40,6 +41,19 @@ class ChatService
         ]);
 
         broadcast(new MessageSavedEvent($message))->toOthers();
+
+        // Get all users in the chat except the sender
+        $recipients = User::query()
+            ->whereIn('id', function($query) use ($chat) {
+                $query->select('user_id')
+                    ->from('chat_users')
+                    ->where('chat_id', $chat->id);
+            })
+            ->whereNot('id', $user->id)
+            ->get();
+
+        // Send notification to each recipient
+        Notification::send($recipients, new NewMessageNotification($message));
 
         return $message;
     }

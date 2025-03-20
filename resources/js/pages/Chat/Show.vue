@@ -120,7 +120,6 @@ onMounted(() => {
     console.log(`chat.${chat.id}`);
     window.Echo.private(`chat.${chat.id}`)
         .listen('MessageSavedEvent', (e) => {
-            console.log(e);
             messages.value.push(e)
         });
 
