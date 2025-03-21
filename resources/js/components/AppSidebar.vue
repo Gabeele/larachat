@@ -6,10 +6,11 @@ import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type ChatNavItem, ChatsData, NavItem } from '@/types';
+import { ChatsData, NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 import { Speech, MessageSquare } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
+import { playNotificationSound } from '@/lib/notification';
 
 const page = usePage();
 const chats = usePage().props.chats as ChatsData;
@@ -40,8 +41,8 @@ onMounted(() => {
     window.Echo.private(`App.Models.User.${auth.user.id}`)
         .notification((notification) => {
             if (notification.type.includes('NewMessageNotification') && notification.chat_id) {
-                console.log('Marking new message for chat:', notification.chat_id);
                 hasNewMessage.value[notification.chat_id] = true;
+                playNotificationSound();
             }
         });
 });
