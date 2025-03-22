@@ -49,7 +49,8 @@ onMounted(() => {
 
 watch(() => page.url, (newUrl) => {
     const chatId = newUrl.match(/\/chats\/(\d+)/)?.[1];
-    if (chatId && hasNewMessage.value[chatId]) {
+    if (chatId) {
+        // Clear the new message badge for the current chat when we focus on it
         hasNewMessage.value[chatId] = false;
     }
 });
